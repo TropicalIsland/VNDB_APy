@@ -28,55 +28,48 @@ class Vndb():
 		res = self.send(message)
 		return res.json()
 
-	def get(self,type,request=None):
+	def get(self,type=None,flags=None,filters=None,options=None):
+		request = self.request_parser(flags,filters,options)
 		message = "get" + "type" + request
 		res = self.send(message)
 		return res
 
 	def request_parser():
+		#TODO: Implement request parser
 		pass
 
 	def vn(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('vn',request)
+		res = self.get('vn',flags,filters,options)
 		return res.json()
 
 	def releases(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('releases',request)
+		res = self.get('releases',flags,filters,options)
 		return res.json()
 
 	def producer(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('producer',request)
+		res = self.get('producer',flags,filters,options)
 		return res.json()
 
 	def character(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('character',request)
+		res = self.get('character',flags,filters,options)
 		return res.json()
 
 	def staff(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('staff',request)
+		res = self.get('staff',flags,filters,options)
 		return res.json()
 
 	def user(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('user',request)
+		res = self.get('user',flags,filters,options)
 		return res.json()
 
 	def votelist(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('votelist',request)
+		res = self.get('votelist',flags,filters,options)
 		return res.json()
 
 	def vnlist(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('vnlist',request)
+		res = self.get('vnlist',flags,filters,options)
 		return res.json()
 
 	def wishlist(self,flags,filters,options):
-		request = self.request_parser(flags,filters,options)
-		res = self.get('wishlist',request)
+		res = self.get('wishlist',flags,filters,options)
 		return res.json()
