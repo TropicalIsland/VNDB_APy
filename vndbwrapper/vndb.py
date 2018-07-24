@@ -1,19 +1,59 @@
 #import requests
 import json
+import socket
+import ssl
+
+
+def LoginError(Exception):
+	pass
+
+def ConnectionError(Exception):
+	pass
 
 class Vndb():
 
 	terminator = '\u0004'
+	host = "api.vndb.org"
+	port = 19534
+	tls_port = 19535
 
-	def __init__():
-		pass
+	def __init__(self):
+		self.connected = False
+		self.loggedin = False
+		self.socket = None
 
-	def send():
+	def open_connection(self,tls=True):
+		sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+		if tls is True:
+			port = Vndb.tls_port
+			context = ssl.SSLcontext()
+		else:
+			port = Vndb.port
+		addr = (Vndb.host,port)
+		if tls is True:
+			SSLsock = context.wrap_socket(sock)
+			self.socket = SSLsock
+		else:
+			self.socket = sock
+		sock.connect(addr)
+		return True
+
+	def send(self,message):
 		#TODO: implement write to api endpoint
+		if self.loggedin is not True:
+			raise LoginError(
+				"You are not logged in"
+				"This is necessary to access the database"
+				"Calling Vndb.login() will successfully estabilish a limited connection as default"
+				)
+		self.socket.send(message)
 		pass
 
 	def login(self,protocol=1,client='demo',clientver=0.1,username=None,password=None):
-		
+
+		if self.connected is not True:
+			self.open_connection()
+
 		arg = {'protocol': protocol,
 		'client': client, 'clientver': clientver,
 		 'username': username, 'password': password}
@@ -21,7 +61,18 @@ class Vndb():
 		message =  "login" + json.dumps(arg, separators=(',',':')) + Vndb.terminator
 
 		res = self.send(message)
-		return res.json()
+		if res is not "OK":
+			raise LoginError(
+				"There was an error logging into the database"
+				"If you have provided a username and password, they were incorrect"
+				"Calling Vndb.login() will successfully estabilish a limited connection as default"
+				)
+		self.loggedin = True
+		print("Succesfully logged in")
+
+	def logout(self):
+		self.socket.shutdown()
+		self.socket.close()
 
 	def dbstats(self):
 		message = "dbstats"
