@@ -1,4 +1,4 @@
-from vndbwrapper import Vndb, Client
+from vndbwrapper import Vndb
 from pytest import fixture
 
 @fixture
@@ -70,64 +70,75 @@ def error_keys():
 
 def test_vndb_wrapper():
 	"""Tests several API GET calls to VNDB"""
-
+	Vndb_instance = Vndb()
 	# Login check, necessary for all further connections
-	Client.login()
+	Vndb_instance.login()
 
 	# Check dbstats
-	res = Vndb.dbstats()
+	res = Vndb_instance.dbstats()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(stats_keys).issubset(res.keys())
 
 	# Check VN
-	res = Vndb.vn()
+	res = Vndb_instance.vn()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(vn_keys).issubset(res.keys())
 
 	# Check release
-	res = Vndb.release()
+	res = Vndb_instance.release()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(release_keys).issubset(res.keys())
 
 	# Check producer
-	res = Vndb.producer()
+	res = Vndb_instance.producer()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(producer_keys).issubset(res.keys())
 
 	# Check character
-	res = Vndb.character()
+	res = Vndb_instance.character()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(character_keys).issubset(res.keys())
 
 	# Check staff
-	res = Vndb.staff()
+	res = Vndb_instance.staff()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(staff_keys).issubset(res.keys())
 
 	# Check user
-	res = Vndb.user()
+	res = Vndb_instance.user()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(user_keys).issubset(res.keys())
 
 	# Check votelist
-	res = Vndb.votelist()
+	res = Vndb_instance.votelist()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(votelist_keys).issubset(res.keys())
 
 	# Check VNlist
-	res = Vndb.vnlist()
+	res = Vndb_instance.vnlist()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(vnlist_keys).issubset(res.keys())
 
 	# Check Wishlist
-	res = Vndb.wishlist()
+	res = Vndb_instance.wishlist()
+	print(res)
 	assert isinstance(res, dict)
 	assert set(wishlist_keys).issubset(res.keys())
 
 	# Check Error Response
-	res = Vndb.vn('wrong')
+	res = Vndb_instance.vn('wrong')
+	print(res)
 	assert isinstance(res, dict)
 	assert set(error_keys).issubset(res.keys())
 
 	# Check logout
-	Client.logout()
+	# Vndb_instance.close()
