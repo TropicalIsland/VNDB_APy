@@ -99,10 +99,8 @@ def test_vndb_wrapper():
 
 	# Check VN
 	res = Vndb_instance.vn(flags=["basic","details"],filters=["id = 7"],options={"reverse":True})
-	print(res)
 	assert isinstance(res, dict)
-	assert set(vn_keys()).issubset(res.keys())
-	sys.exit()
+	assert set(vn_keys()).issubset(res["items"].keys())
 
 	# Check release
 	res = Vndb_instance.release()
