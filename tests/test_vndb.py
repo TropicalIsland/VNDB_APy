@@ -1,5 +1,6 @@
 from vndbwrapper import Vndb
 from pytest import fixture
+import sys
 
 @fixture
 def stats_keys():
@@ -66,7 +67,23 @@ def wishlist_keys():
 def error_keys():
 	return ["id","msg"]
 
+@fixture
+def test_flags():
+	return ["id","msg"]
 
+@fixture
+def test_filters():
+	return ["id","msg"]
+
+@fixture
+def test_options():
+	return {"page":2,"results":2,"sort":"id","reverse":True}
+
+
+# TODO: Modularise the testing
+def test_request_paser():
+	Vndb_instance = Vndb()
+	Vndb_instance.request_parser(flags=["basic","details"],filters=["id = 7"],options={"reverse":True})
 
 def test_vndb_wrapper():
 	"""Tests several API GET calls to VNDB"""
@@ -78,67 +95,68 @@ def test_vndb_wrapper():
 	res = Vndb_instance.dbstats()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(stats_keys).issubset(res.keys())
+	assert set(stats_keys()).issubset(res.keys())
 
 	# Check VN
-	res = Vndb_instance.vn()
+	res = Vndb_instance.vn(flags=["basic","details"],filters=["id = 7"],options={"reverse":True})
 	print(res)
 	assert isinstance(res, dict)
-	assert set(vn_keys).issubset(res.keys())
+	assert set(vn_keys()).issubset(res.keys())
+	sys.exit()
 
 	# Check release
 	res = Vndb_instance.release()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(release_keys).issubset(res.keys())
+	assert set(release_keys()).issubset(res.keys())
 
 	# Check producer
 	res = Vndb_instance.producer()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(producer_keys).issubset(res.keys())
+	assert set(producer_keys()).issubset(res.keys())
 
 	# Check character
 	res = Vndb_instance.character()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(character_keys).issubset(res.keys())
+	assert set(character_keys()).issubset(res.keys())
 
 	# Check staff
 	res = Vndb_instance.staff()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(staff_keys).issubset(res.keys())
+	assert set(staff_keys()).issubset(res.keys())
 
 	# Check user
 	res = Vndb_instance.user()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(user_keys).issubset(res.keys())
+	assert set(user_keys()).issubset(res.keys())
 
 	# Check votelist
 	res = Vndb_instance.votelist()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(votelist_keys).issubset(res.keys())
+	assert set(votelist_keys()).issubset(res.keys())
 
 	# Check VNlist
 	res = Vndb_instance.vnlist()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(vnlist_keys).issubset(res.keys())
+	assert set(vnlist_keys()).issubset(res.keys())
 
 	# Check Wishlist
 	res = Vndb_instance.wishlist()
 	print(res)
 	assert isinstance(res, dict)
-	assert set(wishlist_keys).issubset(res.keys())
+	assert set(wishlist_keys()).issubset(res.keys())
 
 	# Check Error Response
 	res = Vndb_instance.vn('wrong')
 	print(res)
 	assert isinstance(res, dict)
-	assert set(error_keys).issubset(res.keys())
+	assert set(error_keys()).issubset(res.keys())
 
 	# Check logout
 	# Vndb_instance.close()
