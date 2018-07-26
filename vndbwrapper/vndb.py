@@ -101,8 +101,15 @@ class Vndb():
 		print("Succesfully logged in")
 
 	def logout(self):
+		if not (self.loggedin or self.connected):
+			raise LoginError(
+				"You cannot logout if you are not logged in"
+				"Please login before you try to logout"
+				)
 		self.socket.shutdown()
 		self.socket.close()
+		self.connected = False
+		self.loggedin = False
 
 	def dbstats(self):
 		message = "dbstats"
@@ -151,7 +158,7 @@ class Vndb():
 		res = res.replace('true', 'True')
 		res = res.replace('null', 'None')
 		res = literal_eval(res)
-		# Remove square brackets around items
+		# Remove square brackets around items value
 		if "items" in res.keys():
 			res["items"]=res["items"][0]
 		return res
