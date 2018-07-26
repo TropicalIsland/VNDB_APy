@@ -1,7 +1,7 @@
 # Python VNDB Public Database API wrapper
 ## TODO: FINISH THIS - QUICK START, OTHER PR etc.
 
-This module provides a method of requesting information from the [VNDB Public database API](https://https://vndb.org/d11) from within Python. Currently only get methods are implemented.
+This module provides a method of requesting information from the [VNDB Public database API](https://vndb.org/d11) from within Python. Currently only get methods are implemented.
 
 The wrapper is accessed using a Vndb class object which is accessible once the package is imported. This class has several methods which are used to interface with the database. A complete list and description of these methods can be found below.
 
@@ -34,7 +34,7 @@ A quick method that returns a dict object containing basic summary stats of the 
 * total tags
 etc.
 
-For full detail, check the [API docs](https://https://vndb.org/d11)
+For full detail, check the [API docs](https://vndb.org/d11)
 
 
 ## Get methods
@@ -64,7 +64,7 @@ Options is an entirely optional parameter. This must be in the form of a dict wh
 * sort
 * reverse
 
-In terms of acceptable values, page requires an int which refers to the page of results you want returned. "results" also accepts an int which refers to the total number of results per page, e.g for {"page":2, "results": 3} you will recieve results 3-5 that matched your request. "sort" accepts a string which refers to the parameter to be sorted by. It is only possible to sort on one parameter. The set of parameters that it is possible to sort on varies with each get-type. For more info, please refer to the actual [API docs](https://https://vndb.org/d11). Again, I may implement an attribute that allows you to check or enforces correct sorting arguments if I get really bored. "reverse" accepts a bool which refers to whether or not you want the returned results to be reversed in order. For the meantime, the object will type check your option arguments but nothing else. The database will return a parse error if you are silly.
+In terms of acceptable values, page requires an int which refers to the page of results you want returned. "results" also accepts an int which refers to the total number of results per page, e.g for {"page":2, "results": 3} you will recieve results 3-5 that matched your request. "sort" accepts a string which refers to the parameter to be sorted by. It is only possible to sort on one parameter. The set of parameters that it is possible to sort on varies with each get-type. For more info, please refer to the actual [API docs](https://vndb.org/d11). Again, I may implement an attribute that allows you to check or enforces correct sorting arguments if I get really bored. "reverse" accepts a bool which refers to whether or not you want the returned results to be reversed in order. For the meantime, the object will type check your option arguments but nothing else. The database will return a parse error if you are silly.
 
 ##In terms of WIP
 * Clearly no set methods have been implemented, but they are less useful so we'll see if I get round to it
@@ -74,4 +74,4 @@ In terms of acceptable values, page requires an int which refers to the page of 
 * Fix exceptions which are making python unhappy for some reason
 
 
-[VNDB API Documentation](https://https://vndb.org/d11)
+[VNDB API Documentation](https://vndb.org/d11)
