@@ -1,9 +1,16 @@
-import setuptools
+
+from glob import glob
+from os.path import basename
+
+from os.path import splitext
+
+from setuptools import find_packages
+from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
+setup(
     name="vndbwrapper",
     version="0.0.1",
     author="Andrew McLean",
@@ -12,10 +19,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/TropicalIsland/VNDB_APy/",
-    packages=['vndbwrapper'],
-    install_requires=[
-          'requests',
-          ],
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     classifiers=(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
