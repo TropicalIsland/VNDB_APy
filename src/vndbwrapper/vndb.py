@@ -4,13 +4,13 @@ import ssl
 from ast import literal_eval
 
 
-def LoginError(Exception):
+class LoginError(Exception):
 	pass
 
-def ConnectionError(Exception):
+class ConnectionError(Exception):
 	pass
 
-def RequestError(Exception):
+class RequestError(Exception):
 	pass
 
 class Vndb():
@@ -60,11 +60,10 @@ class Vndb():
 		message += Vndb.terminator
 		if self.connected is not True:
 			raise LoginError(
-				"You are not logged in"
-				"This is necessary to access the database"
+				"You are not logged in\n"
+				"This is necessary to access the database\n"
 				"Calling Vndb.login() will successfully estabilish a limited connection as default"
 				)
-		print(message)
 		message = str.encode(message)
 		self.socket.send(message)
 		res = self.socket.recv(4096)
@@ -94,8 +93,8 @@ class Vndb():
 
 		res = self.send(message)
 		if res != 'ok':
-			raise LoginError("There was an error logging into the database"
-				"If you have provided a username and password, they were incorrect"
+			raise LoginError("There was an error logging into the database\n"
+				"If you have provided a username and password, they were incorrect\n"
 				"Calling Vndb.login() will successfully estabilish a limited connection as default"
 				)
 		self.loggedin = True
@@ -104,7 +103,7 @@ class Vndb():
 	def logout(self):
 		if not (self.loggedin or self.connected):
 			raise LoginError(
-				"You cannot logout if you are not logged in"
+				"You cannot logout if you are not logged in\n"
 				"Please login before you try to logout"
 				)
 		self.socket.shutdown(socket.SHUT_RDWR)
@@ -121,14 +120,14 @@ class Vndb():
 		if isinstance(flags,str):
 			flags = [flags]
 		if not set(flags).issubset(Vndb.possible_flags[type]):
-			raise RequestError("You have requested flags which do not exist"
-				"To see all avaiable flags, Vndb.possible_flags returns a dictionary "
+			raise RequestError("You have requested flags which do not existn\n"
+				"To see all avaiable flags, Vndb.possible_flags returns a dictionary\n"
 				"which can be indexed by the type of request, i.e Vndb.possible_flags[\"vn\"]"
 				)
 		if self.loggedin is not True:
 			raise LoginError(
-				"You are not logged in"
-				"This is necessary to access the database"
+				"You are not logged in\n"
+				"This is necessary to access the database\n"
 				"Calling Vndb.login() will successfully estabilish a limited connection as default"
 				)
 		request = self.request_parser(flags,filters,options)

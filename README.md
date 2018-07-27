@@ -68,4 +68,3 @@ In terms of acceptable values, page requires an int which refers to the page of 
 * Clearly no set methods have been implemented, but they are less useful so we'll see if I get round to it
 * Full filter checking for each get type if I get bored enough
 * Full option checking for each get type (basically sort checking)
-* Fix custom exceptions which are making python unhappy for some reason
