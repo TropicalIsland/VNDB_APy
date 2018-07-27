@@ -8,7 +8,7 @@ The wrapper is accessed using a Vndb class object which is accessible once the p
 * logout - Closes connection to the database
 * dbstats - returns the current statistics of the database
 * vn
-* releases 
+* release 
 * producer
 * character
 * staff
