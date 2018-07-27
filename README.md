@@ -64,7 +64,7 @@ Options is an entirely optional parameter. This must be in the form of a dict wh
 
 In terms of acceptable values, page requires an int which refers to the page of results you want returned. "results" also accepts an int which refers to the total number of results per page, e.g for {"page":2, "results": 3} you will recieve results 3-5 that matched your request. "sort" accepts a string which refers to the parameter to be sorted by. It is only possible to sort on one parameter. The set of parameters that it is possible to sort on varies with each get-type. For more info, please refer to the actual [API docs](https://vndb.org/d11). Again, I may implement an attribute that allows you to check or enforces correct sorting arguments if I get really bored. "reverse" accepts a bool which refers to whether or not you want the returned results to be reversed in order. These options are not checked in any way before being passed to the server.
 
-##In terms of WIP
+## In terms of WIP
 * Clearly no set methods have been implemented, but they are less useful so we'll see if I get round to it
 * Full filter checking for each get type if I get bored enough
 * Full option checking for each get type (basically sort checking)
