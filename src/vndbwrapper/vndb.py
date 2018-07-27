@@ -22,14 +22,14 @@ class Vndb():
 
 	possible_flags = {
 				"vn":["basic","details","anime","relations","tags","stats","screens","staff"],
-				"releases":["basic","details","vn"],
+				"release":["basic","details","vn"],
 				"producer":["basic","details","relations"],
 				"character":["basic","details","meas","traits","vns","voiced","instances"],
 				"staff":["basic","details","aliases","vns","voiced"],
-				"user":"basic",
-				"votelist":"basic",
-				"vnlist":"basic",
-				"wishlist":"basic"
+				"user":["basic"],
+				"votelist":["basic"],
+				"vnlist":["basic"],
+				"wishlist":["basic"]
 	}
 
 	# TODO: Enforce filter checking
@@ -64,9 +64,10 @@ class Vndb():
 				"This is necessary to access the database"
 				"Calling Vndb.login() will successfully estabilish a limited connection as default"
 				)
+		print(message)
 		message = str.encode(message)
 		self.socket.send(message)
-		res = self.socket.recv(1024)
+		res = self.socket.recv(4096)
 		# Remove END OF TRANSMISSION and return string
 		res = res.decode()[:-1]
 		if res == 'ok':
@@ -93,10 +94,10 @@ class Vndb():
 
 		res = self.send(message)
 		if res != 'ok':
-			raise LoginError("There was an error logging into the database")
-			"""If you have provided a username and password, they were incorrect"
+			raise LoginError("There was an error logging into the database"
+				"If you have provided a username and password, they were incorrect"
 				"Calling Vndb.login() will successfully estabilish a limited connection as default"
-				)"""
+				)
 		self.loggedin = True
 		print("Succesfully logged in")
 
@@ -106,7 +107,7 @@ class Vndb():
 				"You cannot logout if you are not logged in"
 				"Please login before you try to logout"
 				)
-		self.socket.shutdown()
+		self.socket.shutdown(socket.SHUT_RDWR)
 		self.socket.close()
 		self.connected = False
 		self.loggedin = False
@@ -137,7 +138,6 @@ class Vndb():
 
 	@staticmethod
 	def request_parser(flags,filters,options):
-		#TODO: Implement request parser
 		request = " "
 		request += ",".join(flags)
 		if filters:
@@ -151,24 +151,31 @@ class Vndb():
 
 	@staticmethod
 	def response_parser(res):
+		error_flag=False
 		res = res.split(' ',1)
+		if res[0] == 'error':
+			error_flag = True
 		res = (res[-1])
 		# Gotta fix the non-parseable python things
 		res = res.replace('false', 'False')
 		res = res.replace('true', 'True')
 		res = res.replace('null', 'None')
 		res = literal_eval(res)
-		# Remove square brackets around items value
+		# If error, return something slightly meaningful
+		if error_flag:
+			return res['id'].upper() + " error: Please refer to API documentation"
+		# Remove square brackets around items value for requests with options
 		if "items" in res.keys():
 			res["items"]=res["items"][0]
+			res = res["items"]
 		return res
 
 	def vn(self,flags=None,filters=None,options=None):
 		res = self.get('vn',flags,filters,options)
 		return res
 
-	def releases(self,flags=None,filters=None,options=None):
-		res = self.get('releases',flags,filters,options)
+	def release(self,flags=None,filters=None,options=None):
+		res = self.get('release',flags,filters,options)
 		return res
 
 	def producer(self,flags=None,filters=None,options=None):

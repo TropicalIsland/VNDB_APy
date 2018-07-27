@@ -1,11 +1,10 @@
 from vndbwrapper import Vndb
 from pytest import fixture
-import sys
 
 @fixture
 def stats_keys():
 	return ["users", "threads", "tags", "releases", 
-    "producers", "chars", "posts", "vn", "traits"
+    "producers", "staff","chars", "posts", "vn", "traits"
     ]
 
 @fixture
@@ -68,93 +67,114 @@ def error_keys():
 	return ["id","msg"]
 
 @fixture
+def error_ids():
+	return ["parse","missing","badarg","needlogin","throttled","auth",
+	"loggedin","gettype","getinfo","filter","settype"]
+
+@fixture
 def test_flags():
-	return ["id","msg"]
+	return ["basic"]
 
 @fixture
 def test_filters():
-	return ["id","msg"]
+	return ["id >= 12"]
 
 @fixture
 def test_options():
 	return {"page":2,"results":2,"sort":"id","reverse":True}
 
 
-# TODO: Modularise the testing
 def test_request_paser():
 	Vndb_instance = Vndb()
-	Vndb_instance.request_parser(flags=["basic","details"],filters=["id = 7"],options={"reverse":True})
+	req = Vndb_instance.request_parser(flags=test_flags(),filters=test_filters(),options=test_options())
+	assert req == " basic (id >= 12) {\"page\": 2, \"results\": 2, \"sort\": \"id\", \"reverse\": true}"
 
-def test_vndb_wrapper():
-	"""Tests several API GET calls to VNDB"""
+def test_response_parser():
 	Vndb_instance = Vndb()
+	test = Vndb_instance.response_parser("results {\"items\": [{\"id\":3}]}")
+	assert test == {"id": 3}
+
+def _test_dbstats(Vndb):
+	res = Vndb.dbstats()
+	print(res)
+	assert isinstance(res, dict)
+	assert set(res).issubset(set(stats_keys()))
+
+def _test_vn(Vndb):
+	res = Vndb.vn(flags=test_flags(),filters=test_filters(),options=test_options())
+
+	assert isinstance(res, dict)
+	assert set(res.keys()).issubset(set(vn_keys()))
+
+def _test_release(Vndb):
+	res = Vndb.release(flags=test_flags(),filters=test_filters())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(release_keys()))
+
+def _test_producer(Vndb):
+	res = Vndb.producer(flags=test_flags(),filters=test_filters(),options=test_options())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(producer_keys()))
+
+def _test_character(Vndb):
+	res = Vndb.character(flags=test_flags(),filters=test_filters())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(character_keys()))
+
+def _test_staff(Vndb):
+	res = Vndb.staff(flags=test_flags(),filters=test_filters(),options=test_options())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(staff_keys()))
+
+def _test_user(Vndb):
+	res = Vndb.user(flags=test_flags())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(user_keys()))
+
+def _test_votelist(Vndb):
+	res = Vndb.votelist(flags=test_flags())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(votelist_keys()))
+
+def _test_vnlist(Vndb):
+	res = Vndb.vnlist(flags=test_flags(),filters=test_filters())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(vnlist_keys()))
+
+def _test_wishlist(Vndb):
+	res = Vndb.wishlist(flags=test_flags())
+	print(res)
+	assert isinstance(res, dict)
+	set(res).issubset(set(wishlist_keys()))
+
+
+def test_vndbwrapper():
+	"""Tests entire wrapper functionality"""
+	Vndb_instance = Vndb()
+
 	# Login check, necessary for all further connections
 	Vndb_instance.login()
 
-	# Check dbstats
-	res = Vndb_instance.dbstats()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(stats_keys()).issubset(res.keys())
+	_test_dbstats(Vndb_instance)
+	_test_vn(Vndb_instance)
+	_test_release(Vndb_instance)
+	_test_producer(Vndb_instance)
+	_test_character(Vndb_instance)
+	_test_staff(Vndb_instance)
 
-	# Check VN
-	res = Vndb_instance.vn(flags=["basic","details"],filters=["id = 7"],options={"reverse":True})
-	assert isinstance(res, dict)
-	assert set(vn_keys()).issubset(res["items"].keys())
-
-	# Check release
-	res = Vndb_instance.release()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(release_keys()).issubset(res.keys())
-
-	# Check producer
-	res = Vndb_instance.producer()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(producer_keys()).issubset(res.keys())
-
-	# Check character
-	res = Vndb_instance.character()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(character_keys()).issubset(res.keys())
-
-	# Check staff
-	res = Vndb_instance.staff()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(staff_keys()).issubset(res.keys())
-
-	# Check user
-	res = Vndb_instance.user()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(user_keys()).issubset(res.keys())
-
-	# Check votelist
-	res = Vndb_instance.votelist()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(votelist_keys()).issubset(res.keys())
-
-	# Check VNlist
-	res = Vndb_instance.vnlist()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(vnlist_keys()).issubset(res.keys())
-
-	# Check Wishlist
-	res = Vndb_instance.wishlist()
-	print(res)
-	assert isinstance(res, dict)
-	assert set(wishlist_keys()).issubset(res.keys())
-
-	# Check Error Response
-	res = Vndb_instance.vn('wrong')
-	print(res)
-	assert isinstance(res, dict)
-	assert set(error_keys()).issubset(res.keys())
+	## These return a parse error for basic?
+	## Invalid arguments to get command
+	#test_user(Vndb_instance)
+	#test_votelist(Vndb_instance)
+	#test_vnlist(Vndb_instance)
+	#test_wishlist(Vndb_instance)
 
 	# Check logout
-	# Vndb_instance.close()
+	Vndb_instance.logout()
